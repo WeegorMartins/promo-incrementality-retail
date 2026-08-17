@@ -31,17 +31,29 @@ CONSULTAS = {
         from analitico.fct_produto_loja_semana
     """,
     "duplicidades_promocionais": """
-        with grupos as (
+        with chaves_repetidas as (
             select
                 produto_id,
                 loja_id,
                 semana,
+                linhas_fonte_promocao
+            from intermediario.int_promocoes_produto_loja_semana
+            where linhas_fonte_promocao > 1
+        ),
+        grupos as (
+            select
+                p.produto_id,
+                p.loja_id,
+                p.semana,
                 count(*) as linhas,
-                count(distinct codigo_exposicao_loja) as codigos_exposicao,
-                count(distinct codigo_encarte) as codigos_encarte
-            from preparacao.stg_promocoes
+                count(distinct p.codigo_exposicao_loja) as codigos_exposicao,
+                count(distinct p.codigo_encarte) as codigos_encarte
+            from preparacao.stg_promocoes p
+            inner join chaves_repetidas c
+                on p.produto_id = c.produto_id
+               and p.loja_id = c.loja_id
+               and p.semana = c.semana
             group by 1, 2, 3
-            having count(*) > 1
         )
         select
             count(*) as chaves_repetidas,
@@ -146,7 +158,13 @@ def main() -> int:
         return 1
 
     PASTA_SAIDAS.mkdir(parents=True, exist_ok=True)
+    pasta_temporaria = RAIZ / "dados" / "banco" / "temporarios_duckdb"
+    pasta_temporaria.mkdir(parents=True, exist_ok=True)
     conexao = duckdb.connect(str(BANCO), read_only=True)
+    conexao.execute("SET threads = 2")
+    conexao.execute("SET memory_limit = '2GB'")
+    conexao.execute("SET preserve_insertion_order = false")
+    conexao.execute(f"SET temp_directory = '{str(pasta_temporaria).replace(chr(39), chr(39) * 2)}'")
     relatorio = {
         "interpretacao_obrigatoria": (
             "As compras pertencem a um painel de domicílios. Ausência de compra no painel "
@@ -155,7 +173,7 @@ def main() -> int:
         "diagnosticos": {},
     }
 
-    print("DIAGNÓSTICO DA BASE COMPLETA")
+    print("DIAGNÓSTICO DA BASE COMPLETA — VERSÃO OTIMIZADA")
     print("IMPORTANTE: o resultado mede compras observadas no painel de domicílios.\n")
 
     for nome, consulta in CONSULTAS.items():
@@ -183,4 +201,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
