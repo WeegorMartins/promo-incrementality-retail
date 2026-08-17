@@ -1,0 +1,25 @@
+name: case_promocoes
+version: "2.0.0"
+config-version: 2
+
+profile: case_promocoes
+
+model-paths: ["modelos"]
+test-paths: ["testes"]
+macro-paths: ["macros"]
+seed-paths: ["sementes"]
+clean-targets: ["target", "dbt_packages", "logs"]
+
+vars:
+  minimo_semanas_com_venda: 2
+
+models:
+  case_promocoes:
+    +materialized: view
+    preparacao:
+      +schema: preparacao
+    intermediario:
+      +schema: intermediario
+    analitico:
+      +schema: analitico
+

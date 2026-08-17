@@ -1,0 +1,48 @@
+responsavel_decisao: Diretor Comercial
+unidade_decisao: mecanica_promocional x categoria x segmento
+
+pergunta_principal: >
+  Quais promoções geram venda adicional sustentável sem evidência material
+  de canibalização ou antecipação de compras?
+
+tratamento_principal:
+  unidade: produto x loja x semana
+  definicao: exposicao em loja, encarte ou ambos
+  observacao: resgate de cupom nao sera usado como tratamento principal
+
+resultados_principais:
+  - unidades_compradas
+  - valor_venda_compras_positivas
+  - compradores
+  - cestas
+
+protecoes:
+  - canibalizacao_na_categoria
+  - queda_pos_promocao
+  - desconto_registrado
+  - concentracao_do_efeito
+  - incerteza_estatistica
+
+janelas_iniciais:
+  anterior: 4_semanas
+  durante: duracao_do_episodio
+  posterior: 4_semanas
+
+acoes_possiveis:
+  - ampliar
+  - manter_direcionado
+  - redesenhar
+  - experimentar
+  - interromper
+
+nivel_da_afirmacao:
+  tipo: estudo_observacional
+  condicoes: comparabilidade, pre_tendencias e robustez
+
+insumos_ausentes:
+  - custo_do_produto
+  - estoque
+  - sortimento
+  - preco_concorrente
+  - custo_operacional_da_campanha
+

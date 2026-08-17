@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_transacoes
+    description: Linhas de compra com nomes padronizados, sem exclusão silenciosa de devoluções.
+    columns:
+      - name: domicilio_id
+        data_tests: [not_null]
+      - name: loja_id
+        data_tests: [not_null]
+      - name: cesta_id
+        data_tests: [not_null]
+      - name: produto_id
+        data_tests: [not_null]
+      - name: semana
+        data_tests: [not_null]
+
+  - name: stg_promocoes
+    description: Exposição promocional por produto, loja e semana.
+    columns:
+      - name: produto_id
+        data_tests: [not_null]
+      - name: loja_id
+        data_tests: [not_null]
+      - name: semana
+        data_tests: [not_null]
+      - name: mecanica_promocional
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - exposicao_e_encarte
+                  - somente_exposicao
+                  - somente_encarte
+                  - sem_mecanica_identificada
+
+  - name: stg_produtos
+    description: Cadastro de produtos.
+    columns:
+      - name: produto_id
+        data_tests: [not_null, unique]
+

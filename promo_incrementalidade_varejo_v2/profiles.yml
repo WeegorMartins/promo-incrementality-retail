@@ -1,0 +1,9 @@
+case_promocoes:
+  target: desenvolvimento
+  outputs:
+    desenvolvimento:
+      type: duckdb
+      path: dados/banco/case_promocoes.duckdb
+      schema: principal
+      threads: 4
+

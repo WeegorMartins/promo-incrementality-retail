@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: fct_produto_loja_semana
+    description: Base analítica produto x loja x semana, incluindo promoção sem venda observada.
+    columns:
+      - name: produto_id
+        data_tests: [not_null]
+      - name: loja_id
+        data_tests: [not_null]
+      - name: semana
+        data_tests: [not_null]
